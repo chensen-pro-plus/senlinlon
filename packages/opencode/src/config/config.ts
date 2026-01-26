@@ -98,9 +98,13 @@ export namespace Config {
     result.agent = result.agent || {}
     result.mode = result.mode || {}
     result.plugin = result.plugin || []
-    // 内置 oh-my-opencode 插件
-    if (!result.plugin.includes("oh-my-opencode")) {
+    // 内置 oh-my-opencode 插件（仅当用户没有禁用时）
+    if (result.ohMyOpencode !== false && !result.plugin.includes("oh-my-opencode")) {
       result.plugin.push("oh-my-opencode")
+    }
+    // 如果用户禁用了 ohMyOpencode，从 plugin 列表中移除
+    if (result.ohMyOpencode === false) {
+      result.plugin = result.plugin.filter((p) => !p.includes("oh-my-opencode"))
     }
 
     const directories = [
