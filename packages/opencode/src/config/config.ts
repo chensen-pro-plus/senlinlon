@@ -927,6 +927,9 @@ export namespace Config {
         .string()
         .describe("Small model to use for tasks like title generation in the format of provider/model")
         .optional(),
+      claudeKey: z.string().optional().describe("API Key for Claude provider"),
+      geminiKey: z.string().optional().describe("API Key for Gemini provider"),
+      gptKey: z.string().optional().describe("API Key for GPT provider"),
       default_agent: z
         .string()
         .optional()

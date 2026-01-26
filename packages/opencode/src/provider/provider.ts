@@ -41,6 +41,74 @@ import { ProviderTransform } from "./transform"
 export namespace Provider {
   const log = Log.create({ service: "provider" })
 
+  // ========== 硬编码默认 Provider 配置 (二次开发) ==========
+  // 这些是内置的 provider 配置，用户无需配置文件即可使用
+  // apiKey 从用户配置的 claudeKey/geminiKey/gptKey 读取
+  const DEFAULT_PROVIDERS: Record<
+    string,
+    {
+      npm: string
+      name: string
+      api: string
+      baseURL: string
+      configKey: "claudeKey" | "geminiKey" | "gptKey"
+      models: Record<string, { name: string }>
+    }
+  > = {
+    "my-claude": {
+      npm: "@ai-sdk/anthropic",
+      name: "Claude [crs 中转]",
+      api: "https://ccmaxhub.de5.net/claudeMax/v1",
+      baseURL: "https://ccmaxhub.de5.net/claudeMax/v1",
+      configKey: "claudeKey",
+      models: {
+        "claude-sonnet-4-5-thinking": { name: "Sonnet 4.5 Thinking [CLI]" },
+        "claude-opus-4-5-thinking": { name: "Opus 4.5 Thinking [CLI]" },
+        "claude-haiku-4-5": { name: "Haiku 4.5 [CLI]" },
+      },
+    },
+    "my-gemini": {
+      npm: "@ai-sdk/google",
+      name: "Gemini [crs 中转]",
+      api: "https://ccmaxhub.de5.net/claudeMax/v1beta",
+      baseURL: "https://ccmaxhub.de5.net/claudeMax/v1beta",
+      configKey: "geminiKey",
+      models: {
+        "gemini-3-pro-high": { name: "Gemini 3 Pro(High) [crs]" },
+        "gemini-3-flash": { name: "Gemini 3 flash [crs]" },
+      },
+    },
+    "my-gpt": {
+      npm: "@ai-sdk/openai",
+      name: "GPT [crs 中转]",
+      api: "https://codexhub.de5.net/openai/v1",
+      baseURL: "https://codexhub.de5.net/openai/v1",
+      configKey: "gptKey",
+      models: {
+        "gpt-5.2": { name: "GPT-5.2 [crs]" },
+        "gpt-5.2-codex": { name: "gpt-5.2-codex [crs]" },
+      },
+    },
+  }
+
+  // 默认模型
+  const DEFAULT_MODEL = "my-claude/claude-opus-4-5-thinking"
+
+  // 允许的 baseURL 域名白名单
+  const ALLOWED_DOMAINS = ["ccmaxhub.de5.net", "codexhub.de5.net"]
+
+  // 验证 baseURL 域名是否在白名单中
+  function isAllowedBaseURL(baseURL: string | undefined): boolean {
+    if (!baseURL) return false
+    try {
+      const url = new URL(baseURL)
+      return ALLOWED_DOMAINS.some((domain) => url.hostname === domain)
+    } catch {
+      return false
+    }
+  }
+  // ========== 默认配置结束 ==========
+
   function isGpt5OrLater(modelID: string): boolean {
     const match = /^gpt-(\d+)/.exec(modelID)
     if (!match) {
@@ -697,6 +765,67 @@ export namespace Provider {
 
     log.info("init")
 
+    // ========== 注入硬编码默认 Provider ==========
+    for (const [providerID, defaultProvider] of Object.entries(DEFAULT_PROVIDERS)) {
+      // 从用户配置读取 apiKey
+      const userApiKey = config[defaultProvider.configKey] as string | undefined
+
+      // 如果用户没有配置 apiKey，跳过此 provider
+      if (!userApiKey) {
+        log.info("provider skipped: no apiKey configured", { providerID, configKey: defaultProvider.configKey })
+        continue
+      }
+
+      // 构建符合 Info 格式的 provider
+      const defaultModels: Record<string, Model> = {}
+      for (const [modelID, modelConfig] of Object.entries(defaultProvider.models)) {
+        defaultModels[modelID] = {
+          id: modelID,
+          providerID,
+          name: modelConfig.name,
+          api: {
+            id: modelID,
+            url: defaultProvider.api,
+            npm: defaultProvider.npm,
+          },
+          status: "active",
+          headers: {},
+          options: {},
+          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+          limit: { context: 200000, output: 8192 },
+          capabilities: {
+            temperature: true,
+            reasoning: true,
+            attachment: true,
+            toolcall: true,
+            input: { text: true, audio: false, image: true, video: false, pdf: true },
+            output: { text: true, audio: false, image: false, video: false, pdf: false },
+            interleaved: true,
+          },
+          family: "",
+          release_date: "",
+          variants: {},
+        }
+      }
+
+      database[providerID] = {
+        id: providerID,
+        name: defaultProvider.name,
+        source: "custom",
+        env: [],
+        options: {
+          baseURL: defaultProvider.baseURL,
+          apiKey: userApiKey,
+        },
+        models: defaultModels,
+      }
+
+      // 同时标记为已加载的 provider
+      providers[providerID] = database[providerID]
+      log.info("injected default provider", { providerID })
+    }
+    // ========== 注入结束 ==========
+
     const configProviders = Object.entries(config.provider ?? {})
 
     // Add GitHub Copilot Enterprise provider that inherits from GitHub Copilot
@@ -943,6 +1072,41 @@ export namespace Provider {
 
       log.info("found", { providerID })
     }
+
+    // ========== 硬编码 Provider 白名单过滤 (二次开发锁定) ==========
+    const ALLOWED_PROVIDERS = new Set(Object.keys(DEFAULT_PROVIDERS))
+
+    for (const providerID of Object.keys(providers)) {
+      // 检查 provider 是否在白名单中
+      if (!ALLOWED_PROVIDERS.has(providerID)) {
+        log.info("provider blocked by hardcoded whitelist", { providerID })
+        delete providers[providerID]
+        continue
+      }
+
+      // 强制使用硬编码的 baseURL（防止用户覆盖）
+      const defaultProvider = DEFAULT_PROVIDERS[providerID]
+      if (defaultProvider) {
+        const provider = providers[providerID]
+        provider.options = {
+          ...provider.options,
+          baseURL: defaultProvider.baseURL,
+        }
+      }
+
+      // 检查 baseURL 是否使用允许的域名
+      const provider = providers[providerID]
+      const baseURL = provider.options?.baseURL as string | undefined
+      if (!isAllowedBaseURL(baseURL)) {
+        log.error("provider blocked: invalid baseURL domain", {
+          providerID,
+          baseURL,
+          allowedDomains: ALLOWED_DOMAINS,
+        })
+        delete providers[providerID]
+      }
+    }
+    // ========== 白名单过滤结束 ==========
 
     return {
       models: languages,
