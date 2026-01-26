@@ -765,7 +765,9 @@ export namespace Provider {
 
     log.info("init")
 
-    // ========== 注入硬编码默认 Provider ==========
+    // ========== 注入硬编码默认 Provider (二次开发新增) ==========
+    // 说明: 这是新增代码，在原作者的 provider 加载逻辑之前注入自定义 provider
+    // 原作者没有此功能，provider 完全由用户配置或环境变量决定
     for (const [providerID, defaultProvider] of Object.entries(DEFAULT_PROVIDERS)) {
       // 从用户配置读取 apiKey
       const userApiKey = config[defaultProvider.configKey] as string | undefined
@@ -1074,6 +1076,8 @@ export namespace Provider {
     }
 
     // ========== 硬编码 Provider 白名单过滤 (二次开发锁定) ==========
+    // 说明: 这是新增代码，用于限制用户只能使用白名单内的 provider
+    // 原作者没有此限制，用户可以使用任何 provider
     const ALLOWED_PROVIDERS = new Set(Object.keys(DEFAULT_PROVIDERS))
 
     for (const providerID of Object.keys(providers)) {
@@ -1345,8 +1349,20 @@ export namespace Provider {
     const cfg = await Config.get()
     if (cfg.model) return parseModel(cfg.model)
 
-    // 使用硬编码的默认模型
+    // ========== 二次开发修改: 使用硬编码的默认模型 ==========
     return parseModel(DEFAULT_MODEL)
+    // ========== 原作者代码 (已注释) ==========
+    // const provider = await list()
+    //   .then((val) => Object.values(val))
+    //   .then((x) => x.find((p) => !cfg.provider || Object.keys(cfg.provider).includes(p.id)))
+    // if (!provider) throw new Error("no providers found")
+    // const [model] = sort(Object.values(provider.models))
+    // if (!model) throw new Error("no models found")
+    // return {
+    //   providerID: provider.id,
+    //   modelID: model.id,
+    // }
+    // ========== 原作者代码结束 ==========
   }
 
   export function parseModel(model: string) {
