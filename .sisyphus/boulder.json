@@ -1,16 +1,8 @@
 {
-  "active_plan": "/Users/工作2/opencode工作区/opencode/.sisyphus/plans/provider-whitelist-lock.md",
-  "started_at": "2026-01-26T03:56:55.593Z",
-  "completed_at": "2026-01-26T04:07:12.000Z",
+  "active_plan": "/Users/工作2/opencode工作区/opencode/.sisyphus/plans/oh-my-opencode-toggle.md",
+  "started_at": "2026-01-26T08:18:46.934Z",
   "session_ids": [
-    "ses_407ad0742ffeeedBY09OZd7cID"
+    "ses_406e133eeffepFYYc18JHbhC1u"
   ],
-  "plan_name": "provider-whitelist-lock",
-  "status": "completed",
-  "tasks_completed": 5,
-  "tasks_total": 5,
-  "commits": [
-    "435311c75",
-    "c819326b5"
-  ]
+  "plan_name": "oh-my-opencode-toggle"
 }
