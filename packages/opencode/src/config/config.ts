@@ -98,6 +98,10 @@ export namespace Config {
     result.agent = result.agent || {}
     result.mode = result.mode || {}
     result.plugin = result.plugin || []
+    // 内置 oh-my-opencode 插件
+    if (!result.plugin.includes("oh-my-opencode")) {
+      result.plugin.push("oh-my-opencode")
+    }
 
     const directories = [
       Global.Path.config,
@@ -930,6 +934,7 @@ export namespace Config {
       claudeKey: z.string().optional().describe("API Key for Claude provider"),
       geminiKey: z.string().optional().describe("API Key for Gemini provider"),
       gptKey: z.string().optional().describe("API Key for GPT provider"),
+      ohMyOpencode: z.boolean().optional().describe("Set to false to disable oh-my-opencode whitelist restriction"),
       default_agent: z
         .string()
         .optional()

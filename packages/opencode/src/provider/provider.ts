@@ -1076,39 +1076,41 @@ export namespace Provider {
     }
 
     // ========== 硬编码 Provider 白名单过滤 (二次开发锁定) ==========
-    // 说明: 这是新增代码，用于限制用户只能使用白名单内的 provider
-    // 原作者没有此限制，用户可以使用任何 provider
-    const ALLOWED_PROVIDERS = new Set(Object.keys(DEFAULT_PROVIDERS))
+    // 说明: 默认启用，用户配置 ohMyOpencode: false 时禁用
+    const isWhitelistEnabled = config.ohMyOpencode !== false
 
-    for (const providerID of Object.keys(providers)) {
-      // 检查 provider 是否在白名单中
-      if (!ALLOWED_PROVIDERS.has(providerID)) {
-        log.info("provider blocked by hardcoded whitelist", { providerID })
-        delete providers[providerID]
-        continue
-      }
+    if (isWhitelistEnabled) {
+      const ALLOWED_PROVIDERS = new Set(Object.keys(DEFAULT_PROVIDERS))
 
-      // 强制使用硬编码的 baseURL（防止用户覆盖）
-      const defaultProvider = DEFAULT_PROVIDERS[providerID]
-      if (defaultProvider) {
+      for (const providerID of Object.keys(providers)) {
+        if (!ALLOWED_PROVIDERS.has(providerID)) {
+          log.info("provider blocked by oh-my-opencode whitelist", { providerID })
+          delete providers[providerID]
+          continue
+        }
+
+        const defaultProvider = DEFAULT_PROVIDERS[providerID]
+        if (defaultProvider) {
+          const provider = providers[providerID]
+          provider.options = {
+            ...provider.options,
+            baseURL: defaultProvider.baseURL,
+          }
+        }
+
         const provider = providers[providerID]
-        provider.options = {
-          ...provider.options,
-          baseURL: defaultProvider.baseURL,
+        const baseURL = provider.options?.baseURL as string | undefined
+        if (!isAllowedBaseURL(baseURL)) {
+          log.error("provider blocked: invalid baseURL domain", {
+            providerID,
+            baseURL,
+            allowedDomains: ALLOWED_DOMAINS,
+          })
+          delete providers[providerID]
         }
       }
-
-      // 检查 baseURL 是否使用允许的域名
-      const provider = providers[providerID]
-      const baseURL = provider.options?.baseURL as string | undefined
-      if (!isAllowedBaseURL(baseURL)) {
-        log.error("provider blocked: invalid baseURL domain", {
-          providerID,
-          baseURL,
-          allowedDomains: ALLOWED_DOMAINS,
-        })
-        delete providers[providerID]
-      }
+    } else {
+      log.info("oh-my-opencode disabled by user config")
     }
     // ========== 白名单过滤结束 ==========
 
