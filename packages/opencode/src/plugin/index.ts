@@ -38,7 +38,15 @@ export namespace Plugin {
       $: Bun.$,
     }
 
+    // Check if oh-my-opencode is disabled via config
+    const isOhMyOpencodeEnabled = config.ohMyOpencode !== false
+
     for (const plugin of INTERNAL_PLUGINS) {
+      // Skip OhMyOpenCodePlugin if disabled
+      if (plugin.name === "OhMyOpenCodePlugin" && !isOhMyOpencodeEnabled) {
+        log.info("skipping internal plugin (disabled via config)", { name: plugin.name })
+        continue
+      }
       log.info("loading internal plugin", { name: plugin.name })
       const init = await plugin(input)
       hooks.push(init)

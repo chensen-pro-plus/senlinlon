@@ -10,6 +10,7 @@ import {
   detectConfigFile,
   migrateConfigFile,
 } from "./shared";
+import { DEFAULT_CONFIG } from "./default-config";
 
 export function loadConfigFromPath(
   configPath: string,
@@ -111,14 +112,22 @@ export function loadPluginConfig(
       ? projectDetected.path
       : projectBasePath + ".json";
 
-  // Load user config first (base)
-  let config: OhMyOpenCodeConfig =
-    loadConfigFromPath(userConfigPath, ctx) ?? {};
+  // Start with built-in default config as base
+  let config: OhMyOpenCodeConfig = { ...DEFAULT_CONFIG };
+  log("Using built-in default config as base", { agents: Object.keys(config.agents ?? {}) });
 
-  // Override with project config
+  // Override with user config if exists
+  const userConfig = loadConfigFromPath(userConfigPath, ctx);
+  if (userConfig) {
+    config = mergeConfigs(config, userConfig);
+    log("Merged user config", { path: userConfigPath });
+  }
+
+  // Override with project config if exists
   const projectConfig = loadConfigFromPath(projectConfigPath, ctx);
   if (projectConfig) {
     config = mergeConfigs(config, projectConfig);
+    log("Merged project config", { path: projectConfigPath });
   }
 
   log("Final merged config", {
