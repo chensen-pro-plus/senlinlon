@@ -3,10 +3,13 @@
 ## Context
 
 ### Original Request
+
 将 oh-my-opencode 作为 Monorepo workspace 内置到 opencode 项目中，重命名包名为 `oh-my-opencode-senlinlon`，无需通过 npm 安装。
 
 ### Interview Summary
+
 **Key Discussions**:
+
 - 包名改为 `@opencode-ai/oh-my-opencode-senlinlon`
 - GitHub 用户名：`senlinlon`
 - 配置文件名：`oh-my-opencode-senlinlon.json`
@@ -18,13 +21,16 @@
 - 保持原作者信息
 
 **Research Findings**:
+
 - OpenCode 使用 Bun Workspaces + Turborepo
 - 插件通过 `INTERNAL_PLUGINS` 数组加载
 - 依赖使用 `workspace:*` 和 `catalog:` 语法
 - oh-my-opencode 有 53+ 文件需要字符串替换
 
 ### Metis Review
+
 **Identified Gaps** (addressed):
+
 - Schema URL 策略：改用相对路径
 - 测试文件处理：保留但标记 broken
 - 依赖版本冲突：验证 zod 等版本兼容
@@ -35,21 +41,25 @@
 ## Work Objectives
 
 ### Core Objective
+
 将 oh-my-opencode 完整集成到 opencode monorepo 中，作为内置插件加载，无需用户单独安装。
 
 ### Concrete Deliverables
+
 - `packages/oh-my-opencode-senlinlon/` - 新的 workspace 包
 - 修改后的 `packages/opencode/src/plugin/index.ts` - 导入新插件
 - 更新的依赖配置
 
 ### Definition of Done
-- [ ] `bun install` 在 opencode 根目录成功
-- [ ] `bun run typecheck` 在根目录通过
-- [ ] `cd packages/oh-my-opencode-senlinlon && bun run build` 成功
-- [ ] 启动 opencode 时插件正常加载（日志可见）
-- [ ] `~/.config/opencode/oh-my-opencode-senlinlon.json` 配置文件被识别
+
+- [x] `bun install` 在 opencode 根目录成功
+- [x] `bun run typecheck` 在根目录通过
+- [x] `cd packages/oh-my-opencode-senlinlon && bun run build` 成功
+- [x] 启动 opencode 时插件正常加载（日志可见）
+- [x] `~/.config/opencode/oh-my-opencode-senlinlon.json` 配置文件被识别
 
 ### Must Have
+
 - 包名为 `@opencode-ai/oh-my-opencode-senlinlon`
 - 所有 `oh-my-opencode` 相关路径/名称替换为 `oh-my-opencode-senlinlon`
 - 所有 `code-yeongyu` GitHub 引用替换为 `senlinlon`
@@ -58,6 +68,7 @@
 - 删除 `optionalDependencies`
 
 ### Must NOT Have (Guardrails)
+
 - 不修改 oh-my-opencode 的任何功能逻辑
 - 不修改 opencode 核心代码（仅限 plugin/index.ts 导入）
 - 不修改测试文件内容（仅删除或保留）
@@ -71,6 +82,7 @@
 ## Verification Strategy (MANDATORY)
 
 ### Test Decision
+
 - **Infrastructure exists**: YES (Bun test)
 - **User wants tests**: Tests-after (保留但标记 broken)
 - **Framework**: bun test
@@ -78,27 +90,31 @@
 ### Manual Execution Verification
 
 **For Package Build:**
-- [ ] Command: `cd packages/oh-my-opencode-senlinlon && bun run build`
-- [ ] Expected: 无错误，生成 `dist/` 目录
+
+- [x] Command: `cd packages/oh-my-opencode-senlinlon && bun run build`
+- [x] Expected: 无错误，生成 `dist/` 目录
 
 **For TypeScript:**
-- [ ] Command: `bun run typecheck` (根目录)
-- [ ] Expected: 无类型错误
+
+- [x] Command: `bun run typecheck` (根目录)
+- [x] Expected: 无类型错误
 
 **For Plugin Loading:**
-- [ ] Command: `bun run dev` (根目录)
-- [ ] Expected: 日志显示 `"loading internal plugin"` 包含 `OhMyOpenCodePlugin`
+
+- [x] Command: `bun run dev` (根目录)
+- [x] Expected: 日志显示 `"loading internal plugin"` 包含 `OhMyOpenCodePlugin`
 
 **For Config Recognition:**
-- [ ] 创建 `~/.config/opencode/oh-my-opencode-senlinlon.json` 测试文件
-- [ ] 启动 opencode，验证配置被读取
+
+- [x] 创建 `~/.config/opencode/oh-my-opencode-senlinlon.json` 测试文件
+- [x] 启动 opencode，验证配置被读取
 
 ---
 
 ## Task Flow
 
 ```
-Task 1 (Copy & Delete) 
+Task 1 (Copy & Delete)
     ↓
 Task 2 (Package.json)
     ↓
@@ -115,9 +131,9 @@ Task 7 (Build & Verify)
 
 ## Parallelization
 
-| Group | Tasks | Reason |
-|-------|-------|--------|
-| - | 所有任务顺序执行 | 每个任务依赖前一个的完成 |
+| Group | Tasks            | Reason                   |
+| ----- | ---------------- | ------------------------ |
+| -     | 所有任务顺序执行 | 每个任务依赖前一个的完成 |
 
 ---
 
@@ -125,7 +141,7 @@ Task 7 (Build & Verify)
 
 ### Phase 1: 复制与清理
 
-- [ ] 1. 复制 oh-my-opencode 到 packages 目录并删除不需要的文件
+- [x] 1. 复制 oh-my-opencode 到 packages 目录并删除不需要的文件
 
   **What to do**:
   1. 复制 `/Users/工作2/opencode工作区/oh-my-opencode` 到 `/Users/工作2/opencode工作区/opencode/packages/oh-my-opencode-senlinlon`
@@ -159,7 +175,7 @@ Task 7 (Build & Verify)
 
 ### Phase 2: Package.json 更新
 
-- [ ] 2. 修改 oh-my-opencode-senlinlon 的 package.json
+- [x] 2. 修改 oh-my-opencode-senlinlon 的 package.json
 
   **What to do**:
   1. 修改 `name` 为 `"@opencode-ai/oh-my-opencode-senlinlon"`
@@ -204,11 +220,10 @@ Task 7 (Build & Verify)
 
 ### Phase 3: 字符串替换
 
-- [ ] 3. 执行全局字符串替换
+- [x] 3. 执行全局字符串替换
 
   **What to do**:
   **注意：按以下顺序执行，避免部分匹配问题**
-
   1. **配置文件名替换**（精确匹配）:
      - `oh-my-opencode.json` → `oh-my-opencode-senlinlon.json`
      - `oh-my-opencode.jsonc` → `oh-my-opencode-senlinlon.jsonc`
@@ -260,7 +275,7 @@ Task 7 (Build & Verify)
 
 ### Phase 4: CLI 移除
 
-- [ ] 4. 删除 CLI 相关代码
+- [x] 4. 删除 CLI 相关代码
 
   **What to do**:
   1. 删除 `packages/oh-my-opencode-senlinlon/src/cli/` 目录
@@ -298,12 +313,11 @@ Task 7 (Build & Verify)
 
 ### Phase 5: opencode 依赖更新
 
-- [ ] 5. 在 opencode 主包添加依赖
+- [x] 5. 在 opencode 主包添加依赖
 
   **What to do**:
   1. 修改 `packages/opencode/package.json`:
      - 在 `dependencies` 中添加: `"@opencode-ai/oh-my-opencode-senlinlon": "workspace:*"`
-  
   2. 检查根 `package.json` 的 `workspaces.catalog`，确认需要的依赖版本:
      - 如果 `@clack/prompts` 不在 catalog 中，在新包中使用固定版本
      - 如果 `@ast-grep/napi` 不在 catalog 中，在新包中使用固定版本
@@ -330,20 +344,19 @@ Task 7 (Build & Verify)
 
 ### Phase 6: 插件集成
 
-- [ ] 6. 修改 opencode 的 plugin/index.ts 导入新插件
+- [x] 6. 修改 opencode 的 plugin/index.ts 导入新插件
 
   **What to do**:
   1. 在 `packages/opencode/src/plugin/index.ts` 文件顶部添加导入:
      ```typescript
      import OhMyOpenCodePlugin from "@opencode-ai/oh-my-opencode-senlinlon"
      ```
-  
   2. 修改 `INTERNAL_PLUGINS` 数组:
      ```typescript
      const INTERNAL_PLUGINS: PluginInstance[] = [
-       CodexAuthPlugin, 
+       CodexAuthPlugin,
        CopilotAuthPlugin,
-       OhMyOpenCodePlugin  // 新增
+       OhMyOpenCodePlugin, // 新增
      ]
      ```
 
@@ -368,7 +381,7 @@ Task 7 (Build & Verify)
 
 ### Phase 7: 构建与验证
 
-- [ ] 7. 构建并验证集成
+- [x] 7. 构建并验证集成
 
   **What to do**:
   1. 在根目录运行类型检查: `bun run typecheck`
@@ -402,15 +415,16 @@ Task 7 (Build & Verify)
 
 ## Commit Strategy
 
-| After Task | Message | Files | Verification |
-|------------|---------|-------|--------------|
-| 7 | `feat(plugin): integrate oh-my-opencode-senlinlon as internal plugin` | packages/oh-my-opencode-senlinlon/*, packages/opencode/package.json, packages/opencode/src/plugin/index.ts | bun run typecheck |
+| After Task | Message                                                               | Files                                                                                                       | Verification      |
+| ---------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------- |
+| 7          | `feat(plugin): integrate oh-my-opencode-senlinlon as internal plugin` | packages/oh-my-opencode-senlinlon/\*, packages/opencode/package.json, packages/opencode/src/plugin/index.ts | bun run typecheck |
 
 ---
 
 ## Success Criteria
 
 ### Verification Commands
+
 ```bash
 # 1. 依赖安装
 bun install  # Expected: 成功，无错误
@@ -435,10 +449,11 @@ test -d packages/oh-my-opencode-senlinlon/src/cli && echo "FAIL" || echo "OK"  #
 ```
 
 ### Final Checklist
-- [ ] All "Must Have" present
-- [ ] All "Must NOT Have" absent
-- [ ] 包名正确为 `@opencode-ai/oh-my-opencode-senlinlon`
-- [ ] 插件被 opencode 作为内部插件加载
-- [ ] 配置文件路径使用 `oh-my-opencode-senlinlon.json`
-- [ ] 无 CLI 相关代码残留
-- [ ] 无平台二进制包残留
+
+- [x] All "Must Have" present
+- [x] All "Must NOT Have" absent
+- [x] 包名正确为 `@opencode-ai/oh-my-opencode-senlinlon`
+- [x] 插件被 opencode 作为内部插件加载
+- [x] 配置文件路径使用 `oh-my-opencode-senlinlon.json`
+- [x] 无 CLI 相关代码残留
+- [x] 无平台二进制包残留
