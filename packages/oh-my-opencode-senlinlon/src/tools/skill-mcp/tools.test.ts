@@ -23,6 +23,8 @@ const mockContext = {
   messageID: "msg-1",
   agent: "test-agent",
   abort: new AbortController().signal,
+  metadata: () => {},
+  ask: async () => {},
 }
 
 describe("skill_mcp tool", () => {
@@ -46,9 +48,7 @@ describe("skill_mcp tool", () => {
       })
 
       // #when / #then
-      await expect(
-        tool.execute({ mcp_name: "test-server" }, mockContext)
-      ).rejects.toThrow(/Missing operation/)
+      await expect(tool.execute({ mcp_name: "test-server" }, mockContext)).rejects.toThrow(/Missing operation/)
     })
 
     it("throws when multiple operations specified", async () => {
@@ -61,11 +61,14 @@ describe("skill_mcp tool", () => {
 
       // #when / #then
       await expect(
-        tool.execute({
-          mcp_name: "test-server",
-          tool_name: "some-tool",
-          resource_name: "some://resource",
-        }, mockContext)
+        tool.execute(
+          {
+            mcp_name: "test-server",
+            tool_name: "some-tool",
+            resource_name: "some://resource",
+          },
+          mockContext,
+        ),
       ).rejects.toThrow(/Multiple operations/)
     })
 
@@ -83,9 +86,9 @@ describe("skill_mcp tool", () => {
       })
 
       // #when / #then
-      await expect(
-        tool.execute({ mcp_name: "unknown-server", tool_name: "some-tool" }, mockContext)
-      ).rejects.toThrow(/not found/)
+      await expect(tool.execute({ mcp_name: "unknown-server", tool_name: "some-tool" }, mockContext)).rejects.toThrow(
+        /not found/,
+      )
     })
 
     it("includes available MCP servers in error message", async () => {
@@ -105,9 +108,9 @@ describe("skill_mcp tool", () => {
       })
 
       // #when / #then
-      await expect(
-        tool.execute({ mcp_name: "missing", tool_name: "test" }, mockContext)
-      ).rejects.toThrow(/sqlite.*db-skill|rest-api.*api-skill/s)
+      await expect(tool.execute({ mcp_name: "missing", tool_name: "test" }, mockContext)).rejects.toThrow(
+        /sqlite.*db-skill|rest-api.*api-skill/s,
+      )
     })
 
     it("throws on invalid JSON arguments", async () => {
@@ -125,11 +128,14 @@ describe("skill_mcp tool", () => {
 
       // #when / #then
       await expect(
-        tool.execute({
-          mcp_name: "test-server",
-          tool_name: "some-tool",
-          arguments: "not valid json",
-        }, mockContext)
+        tool.execute(
+          {
+            mcp_name: "test-server",
+            tool_name: "some-tool",
+            arguments: "not valid json",
+          },
+          mockContext,
+        ),
       ).rejects.toThrow(/Invalid arguments JSON/)
     })
   })

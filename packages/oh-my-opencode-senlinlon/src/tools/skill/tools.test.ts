@@ -55,6 +55,8 @@ const mockContext = {
   messageID: "msg-1",
   agent: "test-agent",
   abort: new AbortController().signal,
+  metadata: () => {},
+  ask: async () => {},
 }
 
 describe("skill tool - synchronous description", () => {
@@ -131,7 +133,7 @@ describe("skill tool - agent restriction", () => {
 
     // #when / #then
     await expect(tool.execute({ name: "sisyphus-only-skill" }, context)).rejects.toThrow(
-      'Skill "sisyphus-only-skill" is restricted to agent "sisyphus"'
+      'Skill "sisyphus-only-skill" is restricted to agent "sisyphus"',
     )
   })
 
@@ -143,10 +145,9 @@ describe("skill tool - agent restriction", () => {
 
     // #when / #then
     await expect(tool.execute({ name: "sisyphus-only-skill" }, contextWithoutAgent)).rejects.toThrow(
-      'Skill "sisyphus-only-skill" is restricted to agent "sisyphus"'
+      'Skill "sisyphus-only-skill" is restricted to agent "sisyphus"',
     )
   })
-
 })
 
 describe("skill tool - MCP schema display", () => {
