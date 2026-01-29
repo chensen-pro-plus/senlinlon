@@ -95,6 +95,8 @@ senlinlon --version
 }
 ```
 
+> ⚠️ **重要说明**：这些 API Key 是由 **Senlinlon 作者提供的专用密钥**，不是官方平台（Anthropic、Google、OpenAI）的 API Key。请联系作者获取密钥。
+
 > 💡 只需配置你要使用的 Provider 对应的 Key，无需全部配置。
 
 ### 配置文件路径
