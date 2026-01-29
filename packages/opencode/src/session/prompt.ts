@@ -51,7 +51,7 @@ globalThis.AI_SDK_LOG_WARNINGS = false
 
 export namespace SessionPrompt {
   const log = Log.create({ service: "session.prompt" })
-  export const OUTPUT_TOKEN_MAX = Flag.OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX || 32_000
+  export const OUTPUT_TOKEN_MAX = Flag.SENLINLON_EXPERIMENTAL_OUTPUT_TOKEN_MAX || 32_000
 
   const state = Instance.state(
     () => {
@@ -1193,7 +1193,7 @@ export namespace SessionPrompt {
     if (!userMessage) return input.messages
 
     // Original logic when experimental plan mode is disabled
-    if (!Flag.OPENCODE_EXPERIMENTAL_PLAN_MODE) {
+    if (!Flag.SENLINLON_EXPERIMENTAL_PLAN_MODE) {
       if (input.agent.name === "plan") {
         userMessage.parts.push({
           id: Identifier.ascending("part"),

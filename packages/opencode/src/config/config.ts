@@ -74,14 +74,14 @@ export namespace Config {
     result = mergeConfigConcatArrays(result, await global())
 
     // Custom config path overrides global
-    if (Flag.OPENCODE_CONFIG) {
-      result = mergeConfigConcatArrays(result, await loadFile(Flag.OPENCODE_CONFIG))
-      log.debug("loaded custom config", { path: Flag.OPENCODE_CONFIG })
+    if (Flag.SENLINLON_CONFIG) {
+      result = mergeConfigConcatArrays(result, await loadFile(Flag.SENLINLON_CONFIG))
+      log.debug("loaded custom config", { path: Flag.SENLINLON_CONFIG })
     }
 
     // Project config has highest precedence (overrides global and remote)
-    if (!Flag.OPENCODE_DISABLE_PROJECT_CONFIG) {
-      for (const file of ["opencode.jsonc", "opencode.json"]) {
+    if (!Flag.SENLINLON_DISABLE_PROJECT_CONFIG) {
+      for (const file of ["senlinlon.jsonc", "senlinlon.json"]) {
         const found = await Filesystem.findUp(file, Instance.directory, Instance.worktree)
         for (const resolved of found.toReversed()) {
           result = mergeConfigConcatArrays(result, await loadFile(resolved))
@@ -90,8 +90,8 @@ export namespace Config {
     }
 
     // Inline config content has highest precedence
-    if (Flag.OPENCODE_CONFIG_CONTENT) {
-      result = mergeConfigConcatArrays(result, JSON.parse(Flag.OPENCODE_CONFIG_CONTENT))
+    if (Flag.SENLINLON_CONFIG_CONTENT) {
+      result = mergeConfigConcatArrays(result, JSON.parse(Flag.SENLINLON_CONFIG_CONTENT))
       log.debug("loaded custom config from OPENCODE_CONFIG_CONTENT")
     }
 
@@ -109,34 +109,34 @@ export namespace Config {
 
     const directories = [
       Global.Path.config,
-      // Only scan project .opencode/ directories when project discovery is enabled
-      ...(!Flag.OPENCODE_DISABLE_PROJECT_CONFIG
+      // Only scan project .senlinlon/ directories when project discovery is enabled
+      ...(!Flag.SENLINLON_DISABLE_PROJECT_CONFIG
         ? await Array.fromAsync(
             Filesystem.up({
-              targets: [".opencode"],
+              targets: [".senlinlon"],
               start: Instance.directory,
               stop: Instance.worktree,
             }),
           )
         : []),
-      // Always scan ~/.opencode/ (user home directory)
+      // Always scan ~/.senlinlon/ (user home directory)
       ...(await Array.fromAsync(
         Filesystem.up({
-          targets: [".opencode"],
+          targets: [".senlinlon"],
           start: Global.Path.home,
           stop: Global.Path.home,
         }),
       )),
     ]
 
-    if (Flag.OPENCODE_CONFIG_DIR) {
-      directories.push(Flag.OPENCODE_CONFIG_DIR)
-      log.debug("loading config from OPENCODE_CONFIG_DIR", { path: Flag.OPENCODE_CONFIG_DIR })
+    if (Flag.SENLINLON_CONFIG_DIR) {
+      directories.push(Flag.SENLINLON_CONFIG_DIR)
+      log.debug("loading config from OPENCODE_CONFIG_DIR", { path: Flag.SENLINLON_CONFIG_DIR })
     }
 
     for (const dir of unique(directories)) {
-      if (dir.endsWith(".opencode") || dir === Flag.OPENCODE_CONFIG_DIR) {
-        for (const file of ["opencode.jsonc", "opencode.json"]) {
+      if (dir.endsWith(".senlinlon") || dir === Flag.SENLINLON_CONFIG_DIR) {
+        for (const file of ["senlinlon.jsonc", "senlinlon.json"]) {
           log.debug(`loading config from ${path.join(dir, file)}`)
           result = mergeConfigConcatArrays(result, await loadFile(path.join(dir, file)))
           // to satisfy the type checker
@@ -166,8 +166,8 @@ export namespace Config {
       })
     }
 
-    if (Flag.OPENCODE_PERMISSION) {
-      result.permission = mergeDeep(result.permission ?? {}, JSON.parse(Flag.OPENCODE_PERMISSION))
+    if (Flag.SENLINLON_PERMISSION) {
+      result.permission = mergeDeep(result.permission ?? {}, JSON.parse(Flag.SENLINLON_PERMISSION))
     }
 
     // Backwards compatibility: legacy top-level `tools` config
@@ -194,10 +194,10 @@ export namespace Config {
     if (!result.keybinds) result.keybinds = Info.shape.keybinds.parse({})
 
     // Apply flag overrides for compaction settings
-    if (Flag.OPENCODE_DISABLE_AUTOCOMPACT) {
+    if (Flag.SENLINLON_DISABLE_AUTOCOMPACT) {
       result.compaction = { ...result.compaction, auto: false }
     }
-    if (Flag.OPENCODE_DISABLE_PRUNE) {
+    if (Flag.SENLINLON_DISABLE_PRUNE) {
       result.compaction = { ...result.compaction, prune: false }
     }
 
@@ -265,7 +265,7 @@ export namespace Config {
       })
       if (!md) continue
 
-      const patterns = ["/.opencode/command/", "/.opencode/commands/", "/command/", "/commands/"]
+      const patterns = ["/.senlinlon/command/", "/.senlinlon/commands/", "/command/", "/commands/"]
       const file = rel(item, patterns) ?? path.basename(item)
       const name = trim(file)
 
@@ -305,7 +305,7 @@ export namespace Config {
       })
       if (!md) continue
 
-      const patterns = ["/.opencode/agent/", "/.opencode/agents/", "/agent/", "/agents/"]
+      const patterns = ["/.senlinlon/agent/", "/.senlinlon/agents/", "/agent/", "/agents/"]
       const file = rel(item, patterns) ?? path.basename(item)
       const agentName = trim(file)
 
@@ -1112,8 +1112,8 @@ export namespace Config {
     let result: Info = pipe(
       {},
       mergeDeep(await loadFile(path.join(Global.Path.config, "config.json"))),
-      mergeDeep(await loadFile(path.join(Global.Path.config, "opencode.json"))),
-      mergeDeep(await loadFile(path.join(Global.Path.config, "opencode.jsonc"))),
+      mergeDeep(await loadFile(path.join(Global.Path.config, "senlinlon.json"))),
+      mergeDeep(await loadFile(path.join(Global.Path.config, "senlinlon.jsonc"))),
     )
 
     await import(path.join(Global.Path.config, "config"), {
@@ -1280,7 +1280,7 @@ export namespace Config {
   }
 
   function globalConfigFile() {
-    const candidates = ["opencode.jsonc", "opencode.json", "config.json"].map((file) =>
+    const candidates = ["senlinlon.jsonc", "senlinlon.json", "config.json"].map((file) =>
       path.join(Global.Path.config, file),
     )
     for (const file of candidates) {

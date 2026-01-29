@@ -89,7 +89,7 @@ export namespace Skill {
       claudeDirs.push(globalClaude)
     }
 
-    if (!Flag.OPENCODE_DISABLE_CLAUDE_CODE_SKILLS) {
+    if (!Flag.SENLINLON_DISABLE_CLAUDE_CODE_SKILLS) {
       for (const dir of claudeDirs) {
         const matches = await Array.fromAsync(
           CLAUDE_SKILL_GLOB.scan({
@@ -110,7 +110,7 @@ export namespace Skill {
       }
     }
 
-    // Scan .opencode/skill/ directories
+    // Scan .senlinlon/skill/ directories
     for (const dir of await Config.directories()) {
       for await (const match of OPENCODE_SKILL_GLOB.scan({
         cwd: dir,

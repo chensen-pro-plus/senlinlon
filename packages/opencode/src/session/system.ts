@@ -21,16 +21,16 @@ import { Flag } from "@/flag/flag"
 const log = Log.create({ service: "system-prompt" })
 
 async function resolveRelativeInstruction(instruction: string): Promise<string[]> {
-  if (!Flag.OPENCODE_DISABLE_PROJECT_CONFIG) {
+  if (!Flag.SENLINLON_DISABLE_PROJECT_CONFIG) {
     return Filesystem.globUp(instruction, Instance.directory, Instance.worktree).catch(() => [])
   }
-  if (!Flag.OPENCODE_CONFIG_DIR) {
+  if (!Flag.SENLINLON_CONFIG_DIR) {
     log.warn(
       `Skipping relative instruction "${instruction}" - no OPENCODE_CONFIG_DIR set while project config is disabled`,
     )
     return []
   }
-  return Filesystem.globUp(instruction, Flag.OPENCODE_CONFIG_DIR, Flag.OPENCODE_CONFIG_DIR).catch(() => [])
+  return Filesystem.globUp(instruction, Flag.SENLINLON_CONFIG_DIR, Flag.SENLINLON_CONFIG_DIR).catch(() => [])
 }
 
 export namespace SystemPrompt {
@@ -79,12 +79,12 @@ export namespace SystemPrompt {
     "CONTEXT.md", // deprecated
   ]
   const GLOBAL_RULE_FILES = [path.join(Global.Path.config, "AGENTS.md")]
-  if (!Flag.OPENCODE_DISABLE_CLAUDE_CODE_PROMPT) {
+  if (!Flag.SENLINLON_DISABLE_CLAUDE_CODE_PROMPT) {
     GLOBAL_RULE_FILES.push(path.join(os.homedir(), ".claude", "CLAUDE.md"))
   }
 
-  if (Flag.OPENCODE_CONFIG_DIR) {
-    GLOBAL_RULE_FILES.push(path.join(Flag.OPENCODE_CONFIG_DIR, "AGENTS.md"))
+  if (Flag.SENLINLON_CONFIG_DIR) {
+    GLOBAL_RULE_FILES.push(path.join(Flag.SENLINLON_CONFIG_DIR, "AGENTS.md"))
   }
 
   export async function custom() {
@@ -92,7 +92,7 @@ export namespace SystemPrompt {
     const paths = new Set<string>()
 
     // Only scan local rule files when project discovery is enabled
-    if (!Flag.OPENCODE_DISABLE_PROJECT_CONFIG) {
+    if (!Flag.SENLINLON_DISABLE_PROJECT_CONFIG) {
       for (const localRuleFile of LOCAL_RULE_FILES) {
         const matches = await Filesystem.findUp(localRuleFile, Instance.directory, Instance.worktree)
         if (matches.length > 0) {
