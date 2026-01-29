@@ -1,0 +1,19 @@
+{
+  "name": "senlinlon-cli-windows-x64",
+  "version": "1.0.0",
+  "description": "Senlinlon CLI - Windows x64 二进制文件",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chensen-pro-plus/senlinlon.git"
+  },
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "files": [
+    "bin/"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "senlinlon-cli-linux-arm64",
+  "version": "1.0.0",
+  "description": "Senlinlon CLI - Linux ARM64 二进制文件",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chensen-pro-plus/senlinlon.git"
+  },
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "files": [
+    "bin/"
+  ]
+}
