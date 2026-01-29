@@ -85,7 +85,7 @@ senlinlon --version
 
 ## 🔑 配置 API Key
 
-在项目根目录创建 `senlinlon.json` 配置文件：
+创建配置文件 `senlinlon.json`：
 
 ```json
 {
@@ -96,6 +96,64 @@ senlinlon --version
 ```
 
 > 💡 只需配置你要使用的 Provider 对应的 Key，无需全部配置。
+
+### 配置文件路径
+
+配置文件可以放在以下位置（按优先级从低到高）：
+
+#### macOS / Linux
+
+| 位置 | 路径 | 说明 |
+|------|------|------|
+| 全局配置 | `~/.config/senlinlon/senlinlon.json` | 所有项目共享 |
+| 用户目录 | `~/.senlinlon/senlinlon.json` | 用户级配置 |
+| 项目根目录 | `./senlinlon.json` | 当前项目专用 |
+| 项目配置目录 | `./.senlinlon/senlinlon.json` | 当前项目专用 |
+
+#### Windows
+
+| 位置 | 路径 | 说明 |
+|------|------|------|
+| 全局配置 | `%APPDATA%\senlinlon\senlinlon.json` | 所有项目共享 |
+| 用户目录 | `%USERPROFILE%\.senlinlon\senlinlon.json` | 用户级配置 |
+| 项目根目录 | `.\senlinlon.json` | 当前项目专用 |
+| 项目配置目录 | `.\.senlinlon\senlinlon.json` | 当前项目专用 |
+
+> 📝 **优先级说明**：项目配置 > 用户目录配置 > 全局配置。高优先级的配置会覆盖低优先级的同名设置。
+
+### 快速配置示例
+
+<details>
+<summary>macOS / Linux</summary>
+
+```bash
+# 创建全局配置目录
+mkdir -p ~/.config/senlinlon
+
+# 创建配置文件
+cat > ~/.config/senlinlon/senlinlon.json << 'EOF'
+{
+  "claudeKey": "sk-ant-api03-your-key-here"
+}
+EOF
+```
+
+</details>
+
+<details>
+<summary>Windows (PowerShell)</summary>
+
+```powershell
+# 创建全局配置目录
+New-Item -ItemType Directory -Force -Path "$env:APPDATA\senlinlon"
+
+# 创建配置文件
+Set-Content -Path "$env:APPDATA\senlinlon\senlinlon.json" -Value '{
+  "claudeKey": "sk-ant-api03-your-key-here"
+}'
+```
+
+</details>
 
 ## ✨ 特性
 
