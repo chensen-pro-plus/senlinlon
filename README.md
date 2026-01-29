@@ -155,6 +155,20 @@ Set-Content -Path "$env:APPDATA\senlinlon\senlinlon.json" -Value '{
 
 </details>
 
+### 禁用 oh-my-opencode 插件
+
+默认情况下，Senlinlon 内置了 `oh-my-opencode` 插件，该插件限制只能使用白名单内的 Provider（`my-claude`、`my-gemini`、`my-gpt`）。
+
+如果你需要使用其他 Provider（如官方的 `anthropic`、`openai`、`google` 等），可以在配置文件中禁用此限制：
+
+```json
+{
+  "ohMyOpencode": false
+}
+```
+
+禁用后，你可以使用任何标准 Provider 配置。
+
 ## ✨ 特性
 
 - 🤖 **智能代码生成** - 基于自然语言描述生成高质量代码
