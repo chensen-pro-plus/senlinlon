@@ -1,0 +1,15 @@
+{
+  "skills": {
+    "release": {
+      "name": "一键打包发布",
+      "description": "自动构建所有平台二进制文件并发布到 GitHub",
+      "triggers": ["打包发布", "发布新版本", "release", "构建并发布", "一键发布"],
+      "file": "skills/release.md"
+    }
+  },
+  "defaults": {
+    "github_repo": "chensen-pro-plus/senlinlon",
+    "private_repo": "https://gitcode.com/senlinlon/myOpenCode.git",
+    "branch": "senlinlon-rebranding"
+  }
+}

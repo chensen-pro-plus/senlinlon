@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+
+// Senlinlon CLI 入口
+// 根据平台查找并执行对应的二进制文件
+
+const { spawn } = require('child_process');
+const path = require('path');
+const fs = require('fs');
+
+// 平台映射
+const PLATFORMS = {
+  'darwin-arm64': 'senlinlon-cli-darwin-arm64',
+  'darwin-x64': 'senlinlon-cli-darwin-x64',
+  'linux-arm64': 'senlinlon-cli-linux-arm64',
+  'linux-x64': 'senlinlon-cli-linux-x64',
+  'win32-x64': 'senlinlon-cli-windows-x64',
+};
+
+function getBinaryPath() {
+  const platform = process.platform;
+  const arch = process.arch;
+  const key = `${platform}-${arch}`;
+  
+  const packageName = PLATFORMS[key];
+  if (!packageName) {
+    console.error(`不支持的平台: ${platform}-${arch}`);
+    console.error(`支持的平台: ${Object.keys(PLATFORMS).join(', ')}`);
+    process.exit(1);
+  }
+
+  try {
+    // 尝试找到平台特定的包
+    const packagePath = require.resolve(`${packageName}/package.json`);
+    const packageDir = path.dirname(packagePath);
+    const binaryName = platform === 'win32' ? 'senlinlon.exe' : 'senlinlon';
+    const binaryPath = path.join(packageDir, 'bin', binaryName);
+    
+    if (fs.existsSync(binaryPath)) {
+      return binaryPath;
+    }
+    
+    console.error(`找不到二进制文件: ${binaryPath}`);
+    process.exit(1);
+  } catch (e) {
+    console.error(`找不到平台包 ${packageName}`);
+    console.error(`请尝试重新安装: npm install -g senlinlon-cli`);
+    process.exit(1);
+  }
+}
+
+function main() {
+  const binaryPath = getBinaryPath();
+  const args = process.argv.slice(2);
+  
+  // 使用 spawn 以保持交互式特性
+  const child = spawn(binaryPath, args, {
+    stdio: 'inherit',
+    env: process.env,
+  });
+
+  child.on('error', (err) => {
+    console.error(`执行错误: ${err.message}`);
+    process.exit(1);
+  });
+
+  child.on('exit', (code) => {
+    process.exit(code || 0);
+  });
+}
+
+main();

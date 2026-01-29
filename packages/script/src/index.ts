@@ -17,9 +17,9 @@ if (!semver.satisfies(process.versions.bun, expectedBunVersionRange)) {
 }
 
 const env = {
-  OPENCODE_CHANNEL: process.env["OPENCODE_CHANNEL"],
-  OPENCODE_BUMP: process.env["OPENCODE_BUMP"],
-  OPENCODE_VERSION: process.env["OPENCODE_VERSION"],
+  OPENCODE_CHANNEL: process.env["SENLINLON_CHANNEL"] || process.env["OPENCODE_CHANNEL"],
+  OPENCODE_BUMP: process.env["SENLINLON_BUMP"] || process.env["OPENCODE_BUMP"],
+  OPENCODE_VERSION: process.env["SENLINLON_VERSION"] || process.env["OPENCODE_VERSION"],
 }
 const CHANNEL = await (async () => {
   if (env.OPENCODE_CHANNEL) return env.OPENCODE_CHANNEL
