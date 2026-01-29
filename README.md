@@ -205,53 +205,6 @@ Senlinlon 会自动检测项目类型并进入交互模式。
 > 给这个函数添加单元测试
 ```
 
-### 快捷键
-
-| 快捷键 | 功能 |
-|--------|------|
-| `Ctrl+C` | 中断当前操作 / 退出 |
-| `Ctrl+L` | 清屏 |
-| `↑` / `↓` | 浏览历史记录 |
-| `Tab` | 自动补全 |
-
-### 示例场景
-
-<details>
-<summary>代码生成</summary>
-
-```
-> 创建一个 Python 函数，读取 CSV 文件并返回 JSON 格式
-```
-
-</details>
-
-<details>
-<summary>代码解释</summary>
-
-```
-> 解释 src/utils/auth.ts 文件的功能
-```
-
-</details>
-
-<details>
-<summary>Bug 修复</summary>
-
-```
-> 这个函数运行时报错 "TypeError: Cannot read property 'map' of undefined"，帮我修复
-```
-
-</details>
-
-<details>
-<summary>代码重构</summary>
-
-```
-> 将这个类重构为函数式组件
-```
-
-</details>
-
 ## ✨ 特性
 
 - 🤖 **智能代码生成** - 基于自然语言描述生成高质量代码
