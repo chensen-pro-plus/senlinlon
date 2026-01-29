@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "opencode",
+  "name": "senlinlon",
   "description": "AI-powered development tool",
   "private": true,
   "type": "module",
@@ -73,14 +73,14 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.933.0",
-    "@opencode-ai/plugin": "workspace:*",
-    "@opencode-ai/script": "workspace:*",
-    "@opencode-ai/sdk": "workspace:*",
+    "@senlinlon/plugin": "workspace:*",
+    "@senlinlon/script": "workspace:*",
+    "@senlinlon/sdk": "workspace:*",
     "typescript": "catalog:"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/anomalyco/opencode"
+    "url": "https://github.com/chensen-pro-plus/opencode-senlinlon-Publish"
   },
   "license": "MIT",
   "prettier": {

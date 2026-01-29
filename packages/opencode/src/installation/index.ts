@@ -81,15 +81,15 @@ export namespace Installation {
       },
       {
         name: "brew" as const,
-        command: () => $`brew list --formula opencode`.throws(false).quiet().text(),
+        command: () => $`brew list --formula senlinlon`.throws(false).quiet().text(),
       },
       {
         name: "scoop" as const,
-        command: () => $`scoop list opencode`.throws(false).quiet().text(),
+        command: () => $`scoop list senlinlon`.throws(false).quiet().text(),
       },
       {
         name: "choco" as const,
-        command: () => $`choco list --limit-output opencode`.throws(false).quiet().text(),
+        command: () => $`choco list --limit-output senlinlon`.throws(false).quiet().text(),
       },
     ]
 
@@ -104,7 +104,7 @@ export namespace Installation {
     for (const check of checks) {
       const output = await check.command()
       const installedName =
-        check.name === "brew" || check.name === "choco" || check.name === "scoop" ? "opencode" : "opencode-ai"
+        check.name === "brew" || check.name === "choco" || check.name === "scoop" ? "senlinlon" : "senlinlon"
       if (output.includes(installedName)) {
         return check.name
       }
@@ -121,11 +121,11 @@ export namespace Installation {
   )
 
   async function getBrewFormula() {
-    const tapFormula = await $`brew list --formula anomalyco/tap/opencode`.throws(false).quiet().text()
-    if (tapFormula.includes("opencode")) return "anomalyco/tap/opencode"
-    const coreFormula = await $`brew list --formula opencode`.throws(false).quiet().text()
-    if (coreFormula.includes("opencode")) return "opencode"
-    return "opencode"
+    const tapFormula = await $`brew list --formula anomalyco/tap/senlinlon`.throws(false).quiet().text()
+    if (tapFormula.includes("senlinlon")) return "anomalyco/tap/senlinlon"
+    const coreFormula = await $`brew list --formula senlinlon`.throws(false).quiet().text()
+    if (coreFormula.includes("senlinlon")) return "senlinlon"
+    return "senlinlon"
   }
 
   export async function upgrade(method: Method, target: string) {
@@ -138,13 +138,13 @@ export namespace Installation {
         })
         break
       case "npm":
-        cmd = $`npm install -g opencode-ai@${target}`
+        cmd = $`npm install -g senlinlon@${target}`
         break
       case "pnpm":
-        cmd = $`pnpm install -g opencode-ai@${target}`
+        cmd = $`pnpm install -g senlinlon@${target}`
         break
       case "bun":
-        cmd = $`bun install -g opencode-ai@${target}`
+        cmd = $`bun install -g senlinlon@${target}`
         break
       case "brew": {
         const formula = await getBrewFormula()
@@ -155,10 +155,10 @@ export namespace Installation {
         break
       }
       case "choco":
-        cmd = $`echo Y | choco upgrade opencode --version=${target}`
+        cmd = $`echo Y | choco upgrade senlinlon --version=${target}`
         break
       case "scoop":
-        cmd = $`scoop install opencode@${target}`
+        cmd = $`scoop install senlinlon@${target}`
         break
       default:
         throw new Error(`Unknown method: ${method}`)
@@ -181,15 +181,15 @@ export namespace Installation {
 
   export const VERSION = typeof OPENCODE_VERSION === "string" ? OPENCODE_VERSION : "local"
   export const CHANNEL = typeof OPENCODE_CHANNEL === "string" ? OPENCODE_CHANNEL : "local"
-  export const USER_AGENT = `opencode/${CHANNEL}/${VERSION}/${Flag.SENLINLON_CLIENT}`
+  export const USER_AGENT = `senlinlon/${CHANNEL}/${VERSION}/${Flag.SENLINLON_CLIENT}`
 
   export async function latest(installMethod?: Method) {
     const detectedMethod = installMethod || (await method())
 
     if (detectedMethod === "brew") {
       const formula = await getBrewFormula()
-      if (formula === "opencode") {
-        return fetch("https://formulae.brew.sh/api/formula/opencode.json")
+      if (formula === "senlinlon") {
+        return fetch("https://formulae.brew.sh/api/formula/senlinlon.json")
           .then((res) => {
             if (!res.ok) throw new Error(res.statusText)
             return res.json()
@@ -205,7 +205,7 @@ export namespace Installation {
         return reg.endsWith("/") ? reg.slice(0, -1) : reg
       })
       const channel = CHANNEL
-      return fetch(`${registry}/opencode-ai/${channel}`)
+      return fetch(`${registry}/senlinlon/${channel}`)
         .then((res) => {
           if (!res.ok) throw new Error(res.statusText)
           return res.json()
