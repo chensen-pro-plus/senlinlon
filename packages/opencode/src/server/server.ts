@@ -80,7 +80,7 @@ export namespace Server {
         .use((c, next) => {
           const password = Flag.SENLINLON_SERVER_PASSWORD
           if (!password) return next()
-          const username = Flag.SENLINLON_SERVER_USERNAME ?? "opencode"
+          const username = Flag.SENLINLON_SERVER_USERNAME ?? "senlinlon"
           return basicAuth({ username, password })(c, next)
         })
         .use(async (c, next) => {
@@ -142,9 +142,9 @@ export namespace Server {
           openAPIRouteHandler(app, {
             documentation: {
               info: {
-                title: "opencode",
+                title: "senlinlon",
                 version: "0.0.3",
-                description: "opencode api",
+                description: "senlinlon api",
               },
               openapi: "3.1.1",
             },
@@ -520,9 +520,9 @@ export namespace Server {
     const result = await generateSpecs(App() as Hono, {
       documentation: {
         info: {
-          title: "opencode",
+          title: "senlinlon",
           version: "1.0.0",
-          description: "opencode api",
+          description: "senlinlon api",
         },
         openapi: "3.1.1",
       },
