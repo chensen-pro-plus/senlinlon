@@ -171,6 +171,87 @@ Set-Content -Path "$env:APPDATA\senlinlon\senlinlon.json" -Value '{
 
 禁用后，你可以使用任何标准 Provider 配置。
 
+## 🚀 使用方法
+
+### 启动 Senlinlon
+
+在项目目录中运行：
+
+```bash
+senlinlon
+```
+
+Senlinlon 会自动检测项目类型并进入交互模式。
+
+### 常用命令
+
+| 命令 | 说明 |
+|------|------|
+| `senlinlon` | 启动交互式 AI 助手 |
+| `senlinlon --version` | 查看版本号 |
+| `senlinlon --help` | 查看帮助信息 |
+
+### 交互模式使用
+
+启动后，你可以直接用自然语言与 AI 对话：
+
+```
+> 帮我创建一个 React 组件，显示用户列表
+
+> 解释一下这段代码是做什么的
+
+> 帮我修复这个 TypeScript 类型错误
+
+> 给这个函数添加单元测试
+```
+
+### 快捷键
+
+| 快捷键 | 功能 |
+|--------|------|
+| `Ctrl+C` | 中断当前操作 / 退出 |
+| `Ctrl+L` | 清屏 |
+| `↑` / `↓` | 浏览历史记录 |
+| `Tab` | 自动补全 |
+
+### 示例场景
+
+<details>
+<summary>代码生成</summary>
+
+```
+> 创建一个 Python 函数，读取 CSV 文件并返回 JSON 格式
+```
+
+</details>
+
+<details>
+<summary>代码解释</summary>
+
+```
+> 解释 src/utils/auth.ts 文件的功能
+```
+
+</details>
+
+<details>
+<summary>Bug 修复</summary>
+
+```
+> 这个函数运行时报错 "TypeError: Cannot read property 'map' of undefined"，帮我修复
+```
+
+</details>
+
+<details>
+<summary>代码重构</summary>
+
+```
+> 将这个类重构为函数式组件
+```
+
+</details>
+
 ## ✨ 特性
 
 - 🤖 **智能代码生成** - 基于自然语言描述生成高质量代码
