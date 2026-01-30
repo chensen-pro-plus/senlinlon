@@ -107,6 +107,46 @@ Learn more about [agents](https://opencode.ai/docs/agents).
 
 For more info on how to configure OpenCode [**head over to our docs**](https://opencode.ai/docs).
 
+### NPM 源配置
+
+如果你之前配置了 cnpm 镜像源，现在想换回 npm 官方源，可以使用以下方法：
+
+#### 方法 1: 直接设置回官方源
+
+```bash
+npm config set registry https://registry.npmjs.org/
+```
+
+#### 方法 2: 删除自定义源配置
+
+```bash
+npm config delete registry
+```
+
+这会删除自定义配置，npm 会自动使用默认的官方源。
+
+#### 验证当前使用的源
+
+```bash
+npm config get registry
+```
+
+应该显示: `https://registry.npmjs.org/`
+
+#### 如果使用了 .npmrc 文件
+
+检查项目根目录或用户目录下的 `.npmrc` 文件，删除或修改其中的 `registry` 配置：
+
+```bash
+# 查看用户级配置文件
+cat ~/.npmrc
+
+# 查看项目级配置文件
+cat .npmrc
+```
+
+如果里面有类似 `registry=https://registry.npmmirror.com` 的配置，删除或修改为官方源即可。
+
 ### Contributing
 
 If you're interested in contributing to OpenCode, please read our [contributing docs](./CONTRIBUTING.md) before submitting a pull request.
