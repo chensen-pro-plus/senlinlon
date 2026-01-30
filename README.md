@@ -83,6 +83,46 @@ senlinlon --version
 
 </details>
 
+## 🔧 NPM 源配置
+
+如果你之前配置了 cnpm 镜像源，现在想换回 npm 官方源，可以使用以下方法：
+
+### 方法 1: 直接设置回官方源
+
+```bash
+npm config set registry https://registry.npmjs.org/
+```
+
+### 方法 2: 删除自定义源配置
+
+```bash
+npm config delete registry
+```
+
+这会删除自定义配置，npm 会自动使用默认的官方源。
+
+### 验证当前使用的源
+
+```bash
+npm config get registry
+```
+
+应该显示: `https://registry.npmjs.org/`
+
+### 如果使用了 .npmrc 文件
+
+检查项目根目录或用户目录下的 `.npmrc` 文件，删除或修改其中的 `registry` 配置：
+
+```bash
+# 查看用户级配置文件
+cat ~/.npmrc
+
+# 查看项目级配置文件
+cat .npmrc
+```
+
+如果里面有类似 `registry=https://registry.npmmirror.com` 的配置，删除或修改为官方源即可。
+
 ## 🔑 配置 API Key
 
 创建配置文件 `senlinlon.json`：
@@ -105,21 +145,21 @@ senlinlon --version
 
 #### macOS / Linux
 
-| 位置 | 路径 | 说明 |
-|------|------|------|
-| 全局配置 | `~/.config/senlinlon/senlinlon.json` | 所有项目共享 |
-| 用户目录 | `~/.senlinlon/senlinlon.json` | 用户级配置 |
-| 项目根目录 | `./senlinlon.json` | 当前项目专用 |
-| 项目配置目录 | `./.senlinlon/senlinlon.json` | 当前项目专用 |
+| 位置         | 路径                                 | 说明         |
+| ------------ | ------------------------------------ | ------------ |
+| 全局配置     | `~/.config/senlinlon/senlinlon.json` | 所有项目共享 |
+| 用户目录     | `~/.senlinlon/senlinlon.json`        | 用户级配置   |
+| 项目根目录   | `./senlinlon.json`                   | 当前项目专用 |
+| 项目配置目录 | `./.senlinlon/senlinlon.json`        | 当前项目专用 |
 
 #### Windows
 
-| 位置 | 路径 | 说明 |
-|------|------|------|
-| 全局配置 | `%APPDATA%\senlinlon\senlinlon.json` | 所有项目共享 |
-| 用户目录 | `%USERPROFILE%\.senlinlon\senlinlon.json` | 用户级配置 |
-| 项目根目录 | `.\senlinlon.json` | 当前项目专用 |
-| 项目配置目录 | `.\.senlinlon\senlinlon.json` | 当前项目专用 |
+| 位置         | 路径                                      | 说明         |
+| ------------ | ----------------------------------------- | ------------ |
+| 全局配置     | `%APPDATA%\senlinlon\senlinlon.json`      | 所有项目共享 |
+| 用户目录     | `%USERPROFILE%\.senlinlon\senlinlon.json` | 用户级配置   |
+| 项目根目录   | `.\senlinlon.json`                        | 当前项目专用 |
+| 项目配置目录 | `.\.senlinlon\senlinlon.json`             | 当前项目专用 |
 
 > 📝 **优先级说明**：项目配置 > 用户目录配置 > 全局配置。高优先级的配置会覆盖低优先级的同名设置。
 
@@ -185,11 +225,11 @@ Senlinlon 会自动检测项目类型并进入交互模式。
 
 ### 常用命令
 
-| 命令 | 说明 |
-|------|------|
-| `senlinlon` | 启动交互式 AI 助手 |
-| `senlinlon --version` | 查看版本号 |
-| `senlinlon --help` | 查看帮助信息 |
+| 命令                  | 说明               |
+| --------------------- | ------------------ |
+| `senlinlon`           | 启动交互式 AI 助手 |
+| `senlinlon --version` | 查看版本号         |
+| `senlinlon --help`    | 查看帮助信息       |
 
 ### 交互模式使用
 
@@ -216,13 +256,13 @@ Senlinlon 会自动检测项目类型并进入交互模式。
 
 ## 📦 平台支持
 
-| 平台 | 架构 | npm 包 |
-|------|------|--------|
-| macOS | Apple Silicon (M1/M2/M3) | `senlinlon-cli-darwin-arm64` |
-| macOS | Intel | `senlinlon-cli-darwin-x64` |
-| Linux | x64 | `senlinlon-cli-linux-x64` |
-| Linux | ARM64 | `senlinlon-cli-linux-arm64` |
-| Windows | x64 | `senlinlon-cli-windows-x64` |
+| 平台    | 架构                     | npm 包                       |
+| ------- | ------------------------ | ---------------------------- |
+| macOS   | Apple Silicon (M1/M2/M3) | `senlinlon-cli-darwin-arm64` |
+| macOS   | Intel                    | `senlinlon-cli-darwin-x64`   |
+| Linux   | x64                      | `senlinlon-cli-linux-x64`    |
+| Linux   | ARM64                    | `senlinlon-cli-linux-arm64`  |
+| Windows | x64                      | `senlinlon-cli-windows-x64`  |
 
 > 💡 **提示**：如果您的 CPU 较老，请选择 `baseline` 版本；Alpine Linux 用户请选择 `musl` 版本。
 
